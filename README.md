@@ -19,6 +19,7 @@ pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://down
 
 The additonal installation of other packages with specific versions can be performed using
 ```
-pip install -r requirements.txt
-
+pip install pandas==1.1.5 
+pip install packaging==21.3 
+pip install matplotlib==3.3.4
 ```
