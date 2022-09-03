@@ -38,7 +38,7 @@ The following command will make predictions for 20 training samples used in our 
 ```
 _main_make_predictions_for_real_data.py
 ```
-The output of forecasting accuracies over h=1,...,8 horizons is 
+The output of forecasting accuracies in terms of mape and msis over h=1,...,8 is 
 ```
 mape-ts1
 [127.03773982 377.76535448 101.94123284 126.37218399 146.51827849 180.7473249  197.84411268 211.56709524]
