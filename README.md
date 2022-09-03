@@ -17,7 +17,8 @@ conda activate python36
 pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 ```
 
-Note the additonal required install in the requirements which can be performed with:
+The additonal installation of other packages with specific versions can be performed using
 ```
+pip install -r requirements.txt
 
 ```
