@@ -10,13 +10,14 @@ Pytorch was used for network training.
 
 See `requirements.txt` for package versions - installation in a virtual environment is recommended:
 ```
-conda create --name env python=3.8
-conda activate env
-pip install -r requirements.txt
+#install python with version 3.6.15
+conda create --name python36 python=3.6.15
+conda activate python36
+#install pytorch with version 1.10.2
+pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 ```
-When training on GPU machines, the appropriate PyTorch bundle should be installed - for more info: `https://pytorch.org/get-started/locally/` 
 
 Note the additonal required install in the requirements which can be performed with:
 ```
-pip install git+https://github.com/openai/CLIP.git
+
 ```
