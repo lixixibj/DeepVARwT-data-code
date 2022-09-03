@@ -53,3 +53,10 @@ msis-ts2
 msis-ts3
 [2.06339364 2.28184823 3.09500349 4.06178784 5.20472876 6.46300516 8.24345176 8.30124757]
 ```
+
+References
+----------
+
+- Xixi Li, Jingsong Yuan (2022).  DeepVARwT: Deep Learning for a VAR Model with Trend.  [Working paper]().
+
+
