@@ -5,10 +5,10 @@ We propose a new approach called DeepVARwT that employs deep learning methodolog
 
 ### Preliminaries
 All code was implemented using: 
-[![Python v3.6.15](https://img.shields.io/badge/python-v3.6.15-blue.svg)](https://www.python.org/downloads/release/python-3615/)
+[![Python v3.6.15](https://img.shields.io/badge/python-v3.6.15-blue.svg)](https://www.python.org/downloads/release/python-3615/).
 Pytorch was used for network training.
 
-See `requirements.txt` for package versions - installation in a virtual environment is recommended:
+Installation in a virtual environment is recommended:
 ```
 #install python with version 3.6.15
 conda create --name python36 python=3.6.15
