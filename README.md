@@ -23,7 +23,7 @@ pip install matplotlib==3.3.4
 ```
 ## Usage
 #### Simulation study
-The following command will do the parameter estimation on a simulated VAR(2) procoess
+The following command will do the parameter estimation on a simulated three-diemnsional VAR(2) procoess
 ```
 python _main_for_para_estimation.py
 ```
