@@ -15,7 +15,7 @@ conda activate python36
 pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 ```
 
-The additonal installation of other packages with specific versions can be performed using
+The additonal installation of other packages with specific versions can be implemented using
 ```
 pip install pandas==1.1.5 
 pip install packaging==21.3 
@@ -23,7 +23,7 @@ pip install matplotlib==3.3.4
 ```
 ## Usage
 #### Simulation study
-The following command will do parameter estimation on a simulated VAR(2) procoess
+The following command will do the parameter estimation on a simulated VAR(2) procoess
 ```
 python _main_for_para_estimation.py
 ```
@@ -31,9 +31,9 @@ The output is
 ```
 hhhhh
 ```
-The training loss values, estimated trends and pretrained-model will be saved in the folder `simulation-res`.
+The training loss values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
 #### Real data application
-The following command will make predictions for 20 training samples used in our working paper
+The following command will make predictions for the 20 training samples used in our working paper
 ```
 _main_make_predictions_for_real_data.py
 ```
