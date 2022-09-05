@@ -402,7 +402,7 @@ train_len=len_of_data-test_len
 threshould=0.000002
 
 saving_path='./real-data-forecasting-res/'
-
+#seed values for reproducting forecasting results
 seed_value_list=[400,400,400,400,400,
                  400,400,400,400,400,
                  400,400,600,400,400,
