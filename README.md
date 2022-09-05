@@ -42,16 +42,16 @@ python _main_for_para_estimation.py
 The output of estimated VAR coefficient matrices and variance-covariance matrix of innovations is 
 ```
 VAR coefficients
-tensor([[-1.1090, -0.1008,  0.3455],
-        [-0.6912, -0.4146, -0.2183],
-        [ 0.2595,  0.4317,  0.4818]], grad_fn=<SelectBackward0>)
-tensor([[-0.5682, -0.2867, -0.2283],
-        [-0.4017,  0.4702,  0.3573],
-        [-0.0322, -0.1986,  0.4697]], grad_fn=<SelectBackward0>)
+tensor([[-1.1027, -0.0938,  0.2779],
+        [-0.6773, -0.4081, -0.1873],
+        [ 0.2853,  0.4335,  0.3167]], grad_fn=<SelectBackward0>)
+tensor([[-0.5458, -0.2654, -0.2364],
+        [-0.4080,  0.4836,  0.3899],
+        [-0.0205, -0.2652,  0.2650]], grad_fn=<SelectBackward0>)
 Variance-covariance of innovations
-tensor([[ 0.4660, -0.2893,  0.1261],
-        [-0.2893,  0.3925, -0.0492],
-        [ 0.1261, -0.0492,  0.4742]], grad_fn=<MmBackward0>)
+tensor([[ 0.4280, -0.2636,  0.0963],
+        [-0.2636,  0.3699,  0.0037],
+        [ 0.0963,  0.0037,  0.4149]], grad_fn=<MmBackward0>)
 ```
 The training loss values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
 #### Real data application
