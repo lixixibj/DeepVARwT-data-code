@@ -39,7 +39,7 @@ The following command will do the parameter estimation on a simulated three-diem
 ```
 python _main_for_para_estimation.py
 ```
-The output of estimated VAR coefficient and variance-covariance of innovations is 
+The output of estimated VAR coefficient matrices and variance-covariance matrix of innovations is 
 ```
 VAR coefficients
 tensor([[-1.1090, -0.1008,  0.3455],
