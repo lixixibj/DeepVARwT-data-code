@@ -2,7 +2,7 @@
 ## Introduction
 We propose a new approach called DeepVARwT that employs deep learning methodology for maximum likelihood estimation of the trend and the dependence structure at the same time. A Long Short-Term Memory (LSTM) network is used for this purpose. To ensure the stability of the model, we enforce the causality condition on the autoregressive coefficients using the transformation of Ansley & Kohn (1986). 
 
-## Project strcuture
+## Project structure
 This repository contains python code and data used for reproducing results in simulation study and real data applications.
 
 Here, we brifely introduce some important `.py` files in this project.
