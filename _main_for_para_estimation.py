@@ -387,7 +387,7 @@ num_layers=1
 iterations_trend=15000
 iterations_AR=6000
 threshould=1e-5
-path_of_dataset='./simulation-study/exp168_len800_VAR2_m3_train.csv'
+path_of_dataset='./simulation-study/VAR2_process.csv'
 #saving_path='./image/simulation-estimation-res-two-steps-diff-lr/p2_k3'
 res_saving_path='./simulation-study/simulation-res/'
 train_network(path_of_dataset, num_layers,hidden_dim, iterations_trend,iterations_AR,lr,lr_trend, m, order,res_saving_path,threshould)
