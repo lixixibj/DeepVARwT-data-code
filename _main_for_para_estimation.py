@@ -186,9 +186,10 @@ def print_AR_params(var_coeffs, residual_parameters,m,order):
 
     var_cov_innovations_varp = make_var_cov_matrix_for_innovation_of_varp(residual_parameters, m, order)
     all_stationary_coeffs = A_coeffs_for_causal_VAR(var_coeffs, order, m, var_cov_innovations_varp)
+    print('VAR coefficients')
     for i in range(order):
         print(all_stationary_coeffs[:, :, i])
-    print('var_cov_innovations_of_varp')
+    print('Variance-covariance of innovations')
     print(var_cov_innovations_varp)
 
 
