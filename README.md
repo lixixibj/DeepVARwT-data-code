@@ -41,7 +41,17 @@ python _main_for_para_estimation.py
 ```
 The output is 
 ```
-hhhhh
+VAR coefficients
+tensor([[-1.1090, -0.1008,  0.3455],
+        [-0.6912, -0.4146, -0.2183],
+        [ 0.2595,  0.4317,  0.4818]], grad_fn=<SelectBackward0>)
+tensor([[-0.5682, -0.2867, -0.2283],
+        [-0.4017,  0.4702,  0.3573],
+        [-0.0322, -0.1986,  0.4697]], grad_fn=<SelectBackward0>)
+Variance-covariance of innovations
+tensor([[ 0.4660, -0.2893,  0.1261],
+        [-0.2893,  0.3925, -0.0492],
+        [ 0.1261, -0.0492,  0.4742]], grad_fn=<MmBackward0>)
 ```
 The training loss values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
 #### Real data application
