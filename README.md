@@ -2,6 +2,18 @@
 ## Introduction
 We propose a new approach called DeepVARwT that employs deep learning methodology for maximum likelihood estimation of the trend and the dependence structure at the same time. A Long Short-Term Memory (LSTM) network is used for this purpose. To ensure the stability of the model, we enforce the causality condition on the autoregressive coefficients using the transformation of Ansley & Kohn (1986). 
 
+## Project strcuture
+This repository contains python code used for implementing simulation study and real data applications.
+
+Here, we brifely introduce some important `.py` files in this project.
+
+- `_main_for_para_estimation.py`: main code for parameter estimation in simulation study.
+- `lstm_network.py`: set up an LSTM network for generating trend and VAR parameters.
+- `custom_loss.py`: evaluate log-likelihood function.
+- `_model_fitting_for_real_data.pyy`: model fitting for real data.
+- `_main_make_predictions_for_real_data.py`: make predictions using fitted model.
+
+
 ## Preliminaries
 All code was implemented using 
 [![Python v3.6.15](https://img.shields.io/badge/python-v3.6.15-blue.svg)](https://www.python.org/downloads/release/python-3615/), and Pytorch was used for network training.
