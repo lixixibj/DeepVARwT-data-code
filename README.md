@@ -11,7 +11,7 @@ Here, we brifely introduce some important `.py` files in this project.
 - `lstm_network.py`: set up an LSTM network to generate trend and VAR parameters.
 - `custom_loss.py`: evaluate log-likelihood function.
 - `_model_fitting_for_real_data.py`: model fitting for real data.
-- `_main_make_predictions_for_real_data.py`: make predictions using fitted model.
+- `_main_make_predictions_for_real_data.py`: make predictions using the fitted model.
 
 
 ## Preliminaries
