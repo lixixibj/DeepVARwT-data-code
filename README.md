@@ -1,11 +1,11 @@
-# DeepVARwT: Deep Learning for a VAR Model with Trend
+# DeepVARwT: Deep Learning for a VAR Model with Trend (Li and Yuan, 2022)
 ## Introduction
 We propose a new approach called DeepVARwT that employs deep learning methodology for maximum likelihood estimation of the trend and the dependence structure at the same time. A Long Short-Term Memory (LSTM) network is used for this purpose. To ensure the stability of the model, we enforce the causality condition on the autoregressive coefficients using the transformation of Ansley & Kohn (1986). 
 
 ## Project structure
-This repository contains python code and data used for reproducing results in simulation study and real data applications.
+This repository contains python code and data used to produce results in a simulation study and real data application.
 
-Here, we brifely introduce some important `.py` files in this project.
+Here, we briefly introduce some important `.py` files in this project.
 
 - `_main_for_para_estimation.py`: main code for parameter estimation in simulation study.
 - `lstm_network.py`: set up an LSTM network to generate trend and VAR parameters.
@@ -27,7 +27,7 @@ conda activate python36
 pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 ```
 
-The additonal installation of other packages with specific versions can be implemented using
+The additional installation of other packages with specific versions can be implemented using
 ```
 pip install pandas==1.1.5 
 pip install packaging==21.3 
@@ -35,7 +35,7 @@ pip install matplotlib==3.3.4
 ```
 ## Usage
 #### Simulation study
-The following command will do the parameter estimation on a simulated three-diemnsional VAR(2) procoess
+The following code will do parameter estimation on a simulated three-dimensional VAR(2) procoess
 ```
 python _main_for_para_estimation.py
 ```
@@ -53,13 +53,13 @@ tensor([[ 0.4280, -0.2636,  0.0963],
         [-0.2636,  0.3699,  0.0037],
         [ 0.0963,  0.0037,  0.4149]], grad_fn=<MmBackward0>)
 ```
-The training loss values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
+The training loss function values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
 #### Real data application
-The following command will make predictions for the 20 training samples used in our working paper
+The following code will make predictions from 20 training samples 
 ```
 _main_make_predictions_for_real_data.py
 ```
-The output of forecasting accuracies in terms of mape and msis over h=1,...,8 is 
+The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
 ```
 mape-ts1
 [127.03773982 377.76535448 101.94123284 126.37218399 146.51827849 180.7473249  197.84411268 211.56709524]
