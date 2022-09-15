@@ -57,7 +57,7 @@ The training loss function values, estimated trends and pretrained-model file wi
 #### Real data application
 The following code will make predictions from 20 training samples
 ```
-_main_make_predictions_for_real_data.py
+python _main_make_predictions_for_real_data.py
 ```
 The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
 ```
