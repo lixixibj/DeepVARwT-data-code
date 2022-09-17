@@ -2,6 +2,12 @@
 ## Introduction
 We propose a new approach called DeepVARwT that employs deep learning methodology for maximum likelihood estimation of the trend and the dependence structure at the same time. A Long Short-Term Memory (LSTM) network is used for this purpose. To ensure the stability of the model, we enforce the causality condition on the autoregressive coefficients using the transformation of Ansley & Kohn (1986). 
 
+Authors
+-------
+
+-   [Xixi Li](https://lixixibj.github.io/)
+-   [Jingsong Yuan](https://www.research.manchester.ac.uk/portal/jingsong.yuan.html)
+
 ## Project structure
 This repository contains python code and data used to reproduce results in a simulation study and real data applications.
 
@@ -80,6 +86,5 @@ References
 
 - Xixi Li, Jingsong Yuan (2022).  DeepVARwT: Deep Learning for a VAR Model with Trend.  [Working paper]().
 
-If you have any questions, feel free to contact xixi.li@manchester.ac.uk.
 
 
