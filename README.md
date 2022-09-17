@@ -80,4 +80,6 @@ References
 
 - Xixi Li, Jingsong Yuan (2022).  DeepVARwT: Deep Learning for a VAR Model with Trend.  [Working paper]().
 
+If you have any questions, feel free to contact xixi.li@manchester.ac.uk.
+
 
