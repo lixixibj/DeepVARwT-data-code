@@ -34,7 +34,7 @@ def get_time_function_values(len_of_train_and_test,horizon):
         time_functions_array
            description: array of time function values
            type: array
-           shape: (3,T)
+           shape: (3,len_of_train_and_test)
      """
 
     len_of_train_ts=len_of_train_and_test-horizon
