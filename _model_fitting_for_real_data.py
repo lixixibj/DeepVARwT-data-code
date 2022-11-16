@@ -258,7 +258,7 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
     if not trend_folder:  # 
         os.makedirs(estimated_trend_file_path)
 
-    #create folder for saving estimated trends
+    #create folder for saving pretrained model
     pretrained_model_file_path = res_saving_path + 'pretrained_model/'
     pretrained_model_folder = os.path.exists(pretrained_model_file_path)
     if not pretrained_model_folder:  # 
