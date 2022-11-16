@@ -63,8 +63,8 @@ def get_data_and_time_function_values(train_data):
     time_functions=[]
     time_functions.append(time_functions_array1)
     time_func_array= np.array(time_functions)
-    # the original shape of time functions array: (seq=T,input_size=6)
-    # here we need to change the shape of which to(batch=1,sep=T,input_size=6)
+    # the original shape of time functions array: (batch=1,seq=T,input_size=3)
+    # here we need to change the shape of which to (sep=T,batch=1,input_size=3)
     train_data_and_t_function_values['t_functions'] = torch.from_numpy(time_func_array)
     #observations shape(T,m)
     observations=train_data.iloc[:,1:]
