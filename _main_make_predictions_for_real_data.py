@@ -2,119 +2,51 @@
 2  # -*- coding: utf-8 -*-
 
 
-from custom_loss import *
 import numpy as np
-import pandas as pd
 import torch
-import os
+import random
+from custom_loss import *
+from seed import *
+#np.random.seed(0)
+import random
 from forecasting_accuracy import *
 from lstm_network import *
-from _model_fitting_for_real_data import *
+from _model_fitting_for_real_data_update import *
 
 
 
-
-def get_time_function_values(len_of_train_and_test,horizon):
+def get_t_function_values_(seq_len,horizon):
     r"""
         Get values of time functions.
         Parameters
         ----------
-        len_of_train_and_test
-           description: the length of training and test part of time series
+        seq_len
+           description: the length of training data
            type: int
-           length: T+horizon
+           shape: T
 
         horizon
            description: forecasting horizon
            type: int
-           length: h
+           shape: h
 
         Returns
         -------
-        time_functions_array
-           description: array of time function values
-           type: array
-           shape: (3,len_of_train_and_test)
+        x
+           description: tensor of time function values
+           type: tensor
+           shape: (seq_len,batch,input_size)
      """
 
-    len_of_train_ts=len_of_train_and_test-horizon
-    time_feature_array = np.zeros(shape=(3, len_of_train_and_test))
-    for i in range(len_of_train_and_test):
-        t=(i+1)/len_of_train_ts
-        time_feature_array[0,i]=t
-        time_feature_array[1, i] =t*t
-        time_feature_array[2, i] = t * t*t
+    x = np.zeros(shape=(seq_len+horizon,3))
+    t = (np.arange(seq_len+horizon) + 1) / seq_len
+    x[:,0] = t
+    x[:,1] = t * t
+    x[:,2] = t * t * t
 
-    return time_feature_array
+    x = torch.from_numpy(x.reshape((seq_len+horizon,1,3)))
 
-
-
-
-def get_data_and_time_function_values(train_test_data,horizon):
-    r"""
-        Prepare time function values and data.
-        Parameters
-        ----------
-        train_test_data
-           description: training and test data
-           type: dataframe
-           shape: (T+h,m+1)
-
-        Returns
-        -------
-        data_and_t_function_values
-           description: the observations of time series and values of time functions
-           type: dict
-    """
-
-    data_and_time_func_values = {}
-    data=train_test_data
-    seq_len=data.shape[0]
-    time_feature_array=get_time_function_values(seq_len,horizon)
-    observations=data.iloc[:,1:]
-    observations=np.array(observations).T
-    time_feature_temp=time_feature_array
-    time_feature_array1=time_feature_temp.transpose().tolist()
-    time_features=[]
-    time_features.append(time_feature_array1)
-    time_func_array= np.array(time_features)
-    data_and_time_func_values['t_functions'] = torch.from_numpy(time_func_array)
-    observations=data.iloc[:,1:]
-    observations_array=np.array(observations)
-    data_and_time_func_values['multi_target'] = torch.from_numpy(observations_array)
-
-    return data_and_time_func_values
-
-
-
-
-
-
-def change_data_shape(original_data):
-    r"""
-        Change shape of data.
-        Parameters
-        ----------
-        original_data
-           description: the original data
-           type: tensor
-           shape: (batch,seq,input_size)
-
-        Returns
-        -------
-        transformed data 
-           description: transformed data
-           type: tensor
-           shape: (seq,batch,input_size)
-    """
-    #change to numpy from tensor
-    original_data=original_data.numpy()
-    new_data=[]
-    for seq_temp in range(original_data.shape[1]):
-        new_data.append(original_data[:,seq_temp,:].tolist())
-    #change to tensor
-    new_data=torch.from_numpy(np.array(new_data))
-    return new_data
+    return x
 
 
 
@@ -123,7 +55,8 @@ def change_data_shape(original_data):
 
 
 
-def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,horizon,seasonality):
+
+def forecast_based_on_pretrained_model(train_test_data,order,pretrained_model,horizon,seasonality):
     r"""
         Network training.
         Parameters
@@ -131,7 +64,7 @@ def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,
         train_test_data
            description: training and test data
            type: dataframe
-           shape: (T+h,m+1)
+           shape: (T+h,m)
 
          order
            description: order of VAR model
@@ -189,16 +122,16 @@ def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,
 
     """
 
-
-    data_and_time_func_values = get_data_and_time_function_values(train_test_data,horizon)
-    x = data_and_time_func_values['t_functions']
-    y = data_and_time_func_values['multi_target']
+    train_len = train_test_data.shape[0]-horizon
+    m = data.shape[1]
+    #x:shape(seq_len+horizon,batch,input_size)
+    x=get_t_function_values_(train_len,horizon)
+    #y: shape(T+h,m)
+    y= torch.from_numpy(train_test_data.values)
     lstm_model = pretrained_model
-    train_test_len = x.shape[1]
-    train_len=train_test_len-horizon
-    observations = np.array(train_test_data.iloc[:, 1:])
-    x_input = change_data_shape(x)
-    var_coeffs, residual_parameters, trend= lstm_model(x_input.float())
+    train_test_len = x.shape[0]
+    y_array = np.array(train_test_data)
+    var_coeffs, residual_parameters, trend= lstm_model(x.float())
     #begin to forecast
     # trend forecast shape(h,m)------>(m,h)
     trend_forecast=trend[train_len:,0,:].t()
@@ -207,7 +140,7 @@ def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,
     #lagged p observations
     p_lagged_value = []
     for i in range(order):
-        obs = observations[(train_len - 1 - i), :].reshape(m, 1)
+        obs = y_array[(train_len - 1 - i), :].reshape(m, 1)
         detrend_obs=torch.from_numpy(obs).float()-last_p_trend[(order-1-i),:].reshape(m,1)
         p_lagged_value.append(detrend_obs)
     p_lagged_observations = torch.cat(p_lagged_value, dim=0)
@@ -269,14 +202,13 @@ def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,
     final_upper_forecast_array = final_upper_forecast.detach().numpy()
     final_lower_forecast_array = final_lower_forecast.detach().numpy()
         #acutal_observations:shape(horizon,m)
-    acutal_observations=observations[train_len:,:]
+    acutal_observations=y_array[train_len:,:]
     print('actual foreecat')
     print((acutal_observations))
     print('final forecast')
     print(point_forecast_array)
-    mse_list = []
-    mape_list = []
-    msis_list = []
+    ape=np.zeros((m,horizon))
+    sis=np.zeros((m,horizon))
 
 
     for i in range(m):
@@ -284,19 +216,20 @@ def forecast_based_on_pretrained_model(train_test_data,m,order,pretrained_model,
         print(i)
         print('actucal-forecast')
         print(acutal_observations[:, i])
-        print('mse')
-        print(mse_cal(acutal_observations[:, i], point_forecast_array[i, :]))
-        mse_list.append(list(mse_cal(acutal_observations[:, i], point_forecast_array[i, :])))
         print('mape')
-        print(mape_cal(acutal_observations[:,i], point_forecast_array[i,:]))
-        mape_list.append(mape_cal(acutal_observations[:,i], point_forecast_array[i,:]))
+        #print(mape_cal(acutal_observations[:,i], point_forecast_array[i,:]))
+        ape[i,:]=mape_cal(acutal_observations[:,i], point_forecast_array[i,:])
         print('msis')
-        print(msis(observations[0:train_len,i], acutal_observations[:,i],
-                       final_upper_forecast_array[i,:], final_lower_forecast_array[i,:], 0.05, seasonality, horizon))
-        msis_list.append(msis(observations[0:train_len,i], acutal_observations[:,i],
-                       final_upper_forecast_array[i,:], final_lower_forecast_array[i,:], 0.05, seasonality, horizon))
+        print(y_array[0:train_len,i])
+        print(y_array[0:train_len,i].shape)
+        print(acutal_observations[:,i])
+        print(final_upper_forecast_array[i,:])
+        print(final_lower_forecast_array[i,:])
+        print(msis_cal(y_array[0:train_len,i], acutal_observations[:,i],final_upper_forecast_array[i,:], final_lower_forecast_array[i,:], 0.05, seasonality, horizon))
+        sis[i,:]=msis_cal(y_array[0:train_len,i], acutal_observations[:,i],final_upper_forecast_array[i,:], final_lower_forecast_array[i,:], 0.05, seasonality, horizon)
 
-    return mse_list,mape_list,msis_list,point_forecast_array,final_lower_forecast_array,final_upper_forecast_array
+
+    return ape,sis,point_forecast_array,final_lower_forecast_array,final_upper_forecast_array
 
 
 
@@ -316,7 +249,7 @@ def cal_var_cov_of_prediction_error(A,residual_parameters,horizon,order,m):
            type: tensor
            shape: (m*p,m*p)
 
-        residual_parameters
+      test1  residual_parameters
            description: residual parameters
            type: tensor
            shape: (m*(m+1)/2,)
@@ -380,84 +313,63 @@ def multipy_A_matrix(FF,i,mp):
 
 ############begin to forecasting#################
 m=3
-order=2
-lr_trend=0.001
+order=4
+lr_trend=0.0005
 lr=0.01
 seasonality=4
 name_of_dataset='./real-data/endog_data_m3_T193.csv'
 filted_data_path='./real-data/filtered-data/'
-train_data=pd.read_csv(name_of_dataset)
+data=pd.read_csv(name_of_dataset).iloc[:,1:]
+print('data-shape')
+print(data.shape)
 
-len_of_data=train_data.shape[0]
+len_of_data=data.shape[0]
 hidden_dim=20
 num_layers=1
-iterations_trend=4000
-iterations_AR=9700
-# iterations_trend=100
-# iterations_AR=50
-num_of_forecast=20
-horizons=8
-test_len=horizons+num_of_forecast-1
+iter1=4000
+iter2=8000
+forecast_times=20
+horizon=8
+test_len=horizon+forecast_times-1
 train_len=len_of_data-test_len
-threshould=0.000002
+threshould=0.000005
 
-saving_path='./real-data-forecasting-res/'
-#seed values for reproducting forecasting results
-seed_value_list=[400,400,400,400,400,
-                 400,400,400,400,400,
-                 400,400,600,400,400,
-                 400,600,600,100,300]
+saving_path='./real-data-forecasting-res-test3/'
 
-nums=range(num_of_forecast)
-all_mape_ts1=np.zeros((num_of_forecast,horizons))
-all_msis_ts1=np.zeros((num_of_forecast,horizons))
-all_mape_ts2=np.zeros((num_of_forecast,horizons))
-all_msis_ts2=np.zeros((num_of_forecast,horizons))
-all_mape_ts3=np.zeros((num_of_forecast,horizons))
-all_msis_ts3=np.zeros((num_of_forecast,horizons))
-for f in range(len(nums)):
+seed_value_list=[2100,0,4000,4000,4000,
+                 4000,4000,4000,4000,4000,
+                 4000,4000,4000,4000,4000,
+                 4000,500,4000,4000,4000]
+
+mape_all=np.zeros((forecast_times,m,horizon))
+msis_all=np.zeros((forecast_times,m,horizon))
+
+for f in range(forecast_times):
     set_global_seed(seed_value_list[f])
     #set_global_seed(100)
-    b=nums[f]
+    b=f
     e=b+train_len
-    training_data=train_data.iloc[b:e,:]
-    train_test_data=train_data.iloc[b:(e+horizons),:]
+    training_data=data.iloc[b:e,:]
+    train_test_data=data.iloc[b:(e+horizon),:]
     filtered_data=pd.read_csv(filted_data_path+str(b+1)+'.csv').iloc[8:158,:]
     print('train_data_shape')
     print(training_data.shape)
     res_saving_path=saving_path+'section_'+str(b)+'/'
     # try:
         #model fitting
-    lstm_model=train_network(training_data,filtered_data, num_layers, hidden_dim, iterations_trend, iterations_AR, m, order,lr,lr_trend, res_saving_path,threshould)
+    lstm_model=train_network(training_data,filtered_data, num_layers, hidden_dim, iter1, iter2, m, order,lr,lr_trend, res_saving_path,threshould)
         #make predictions
-    mse_list,mape_list,msis_list,point_forecast_array,final_lower_forecast_array,final_upper_forecast_array=forecast_based_on_pretrained_model(train_test_data,m,order,lstm_model,horizons,seasonality)
-    all_mape_ts1[f,:]=mape_list[0]
-    all_msis_ts1[f,:]=msis_list[0]
-    all_mape_ts2[f,:]=mape_list[1]
-    all_msis_ts2[f,:]=msis_list[1]
-    all_mape_ts3[f,:]=mape_list[2]
-    all_msis_ts3[f,:]=msis_list[2]
+    ape,sis,forecast,fore_low,fore_upp=forecast_based_on_pretrained_model(train_test_data,order,lstm_model,horizon,seasonality)
+    mape_all[f,:,:]=ape
+    msis_all[f,:,:]=sis
     #save forecasts
-    pd.DataFrame(point_forecast_array).to_csv(res_saving_path+'point_forecasts.csv')
-    pd.DataFrame(final_lower_forecast_array).to_csv(res_saving_path+'lower_forecasts.csv')
-    pd.DataFrame(final_upper_forecast_array).to_csv(res_saving_path+'upper_forecasts.csv')
+    pd.DataFrame(forecast).to_csv(res_saving_path+'point_forecasts.csv')
+    pd.DataFrame(fore_low).to_csv(res_saving_path+'lower_forecasts.csv')
+    pd.DataFrame(fore_upp).to_csv(res_saving_path+'upper_forecasts.csv')
 
 #calculate averaged accuracy
-print('mape-ts1')
-print(np.mean(all_mape_ts1,axis=0))
-print('mape-ts2')
-print(np.mean(all_mape_ts2,axis=0))
-print('mape-ts3')
-print(np.mean(all_mape_ts3,axis=0))
-
-print('msis-ts1')
-print(np.mean(all_msis_ts1,axis=0))
-print('msis-ts2')
-print(np.mean(all_msis_ts2,axis=0))
-print('msis-ts3')
-print(np.mean(all_msis_ts3,axis=0))
-
-
-
-
+print('MAPE')
+print(np.mean(mape_all,axis=0))
+print('MSIS')
+print(np.mean(msis_all,axis=0))
 

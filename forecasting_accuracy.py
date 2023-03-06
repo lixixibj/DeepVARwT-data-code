@@ -26,9 +26,10 @@ def smape(actual: np.ndarray, predicted: np.ndarray):
     """
     return 200 * np.abs(actual - predicted) / ((np.abs(actual) + np.abs(predicted)))
 
-def msis(training,actual,upper,lower,a,seasonality,horizon):
+def msis_cal(training,actual,upper,lower,a,seasonality,horizon):
     T = len(training)
     seasonaly_forecast_error=np.mean(mae(training[seasonality:],training[0:(T-seasonality)] ))
+    print('test1')
     interval=(upper-lower)
     lower_penalty=[]
     upper_penalty=[]
@@ -41,8 +42,10 @@ def msis(training,actual,upper,lower,a,seasonality,horizon):
             upper_penalty.append((actual[i]-upper[i])*(2/a))
         else:
             upper_penalty.append(0)
+    print('test2')
     lower_penalty_array=np.array(lower_penalty)
     upper_penalty_array=np.array(upper_penalty)
+    print('test3')
     return (interval+lower_penalty_array+upper_penalty_array)/(seasonaly_forecast_error)
 
 def mse_cal(actual,predicted):

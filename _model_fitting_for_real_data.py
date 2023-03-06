@@ -10,100 +10,40 @@ from lstm_network import DeepVARwT
 
 
 
-def get_t_function_values_(sample_size):
+def get_t_function_values_(seq_len):
     r"""
         Get values of time functions.
         Parameters
         ----------
-        sample_size
+        seq_len
            description: the length of time series
            type: int
            shape: T
 
         Returns
         -------
-        time_functions_array
-           description: array of time function values
-           type: array
-           shape: (3,T)
+        x
+           description: tensor of time function values
+           type: tensor
+           shape: (seq_len,batch,input_size)
      """
 
-    time_functions_array = np.zeros(shape=(3, sample_size))
-    t = (np.arange(sample_size) + 1) / sample_size
-    time_functions_array[0, :] = t
-    time_functions_array[1, :] = t * t
-    time_functions_array[2, :] = t * t * t
+    x = np.zeros(shape=(seq_len,3))
+    t = (np.arange(seq_len) + 1) / seq_len
+    x[:,0] = t
+    x[:,1] = t * t
+    x[:,2] = t * t * t
 
-    return time_functions_array
+    x = torch.from_numpy(x.reshape((seq_len,1,3)))
 
-
-
-def get_data_and_time_function_values(train_data):
-    r"""
-        Prepare time function values and data for neural network training.
-        Parameters
-        ----------
-        train_data
-           description: training data
-           type: dataframe
-           shape: (T,m+1)
-
-        Returns
-        -------
-        data_and_t_function_values
-           description: the observations of multivariate time series and values of time functions
-           type: dict
-    """
-    seq_len=train_data.shape[0]
-    train_data_and_t_function_values={}
-    time_functions_array=get_t_function_values_(seq_len)
-    time_functions_temp=time_functions_array
-
-    time_functions_array1=time_functions_temp.transpose().tolist()
-    time_functions=[]
-    time_functions.append(time_functions_array1)
-    time_func_array= np.array(time_functions)
-    #the shape of time functions array: (batch=1,seq=T,input_size=3)
-    train_data_and_t_function_values['t_functions'] = torch.from_numpy(time_func_array)
-    #observations shape(T,m)
-    observations=train_data.iloc[:,1:]
-    observations_array=np.array(observations)
-    train_data_and_t_function_values['multi_target'] = torch.from_numpy(observations_array)
-
-    return train_data_and_t_function_values
+    return x
 
 
 
 
 
-def change_data_shape(original_data):
-    r"""
-        Change shape of data.
-        Parameters
-        ----------
-        original_data
-           description: the original data
-           type: tensor
-           shape: (batch,seq,input)
 
-        Returns
-        -------
-        transformed data 
-           description: transformed data
-           type: tensor
-           shape: (seq,batch,input)
-    """
-    #change to numpy from tensor
-    original_data=original_data.numpy()
-    new_data=[]
-    for seq_temp in range(original_data.shape[1]):
-        new_data.append(original_data[:,seq_temp,:].tolist())
-    #change to tensor
-    new_data=torch.from_numpy(np.array(new_data))
-    return new_data
-
-
-def plot_estimated_trend(m,df_trend,df_ts,estimated_trend_file_path):
+def plot_estimated_trend(m,df_trend,data,estimated_trend_file_path):
     r"""
         Plot estimated trends and observations.
         Parameters
@@ -113,7 +53,7 @@ def plot_estimated_trend(m,df_trend,df_ts,estimated_trend_file_path):
            type: dataframe
            shape: (T,m)
 
-        df_ts
+        y
            description: observations
            type: dataframe
            shape: (T,m)  
@@ -127,15 +67,15 @@ def plot_estimated_trend(m,df_trend,df_ts,estimated_trend_file_path):
     """
 
     import matplotlib.pyplot as plt
-    if (len(df_ts.columns)) % 2 != 0:
-        n_rows = int(len(df_ts.columns) / 2) + 1
+    if (len(data.columns)) % 2 != 0:
+        n_rows = int(len(data.columns) / 2) + 1
     else:
-        n_rows = int(len(df_ts.columns) / 2)
+        n_rows = int(len(data.columns) / 2)
     fig, axes = plt.subplots(nrows=n_rows, ncols=2, dpi=150, figsize=(10, 10))
-    for i, (col, ax) in enumerate(zip(df_ts.columns, axes.flatten())):
-        df_ts.iloc[:, i].plot(legend=True, ax=ax, label='time series').autoscale(axis='x', tight=True)
+    for i, (col, ax) in enumerate(zip(data.columns, axes.flatten())):
+        data.iloc[:, i].plot(legend=True, ax=ax, label='time series').autoscale(axis='x', tight=True)
         df_trend.iloc[:, i].plot(legend=True, ax=ax, label='trend');
-        ax.set_title(str(col) + ": Time series vs Trend")
+        ax.set_title(str(col) + ": Observations and Trend")
         ax.xaxis.set_ticks_position('none')
         ax.yaxis.set_ticks_position('none')
         ax.spines["top"].set_alpha(0)
@@ -179,7 +119,7 @@ def print_AR_params(var_coeffs, residual_parameters,m,order):
 
 
 
-def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_trend,iterations_AR,m,order,lr,lr_trend,res_saving_path,threshould):
+def train_network(data,filtered_data,num_layers,hidden_dim,iter1,iter2,m,order,lr,lr_trend,res_saving_path,threshould):
     r"""
         Network training.
         Parameters
@@ -187,7 +127,7 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
         train_data
            description: training data
            type: dataframe
-           shape: (T,m+1)
+           shape: (T,m)
 
         filtered_data
            description: filtered data from a two-sided filter for OLS in Phase1
@@ -198,11 +138,11 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
            description: number of LSTM network layer
            type: int
 
-        iterations_trend
+        iter1
            description: number of iterations  for trend estimation in Phase 1
            type: int
 
-        iterations_AR
+        iter2
            description: number of iterations for trend  and AR parameter estimation in Phase 2
            type: int
 
@@ -234,11 +174,16 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
     """
     
 
-    data_and_t_function_values = get_data_and_time_function_values(train_data)
-    #x:shape(batch=1,T,input_size=6)
-    x = data_and_t_function_values['t_functions']
+    seq_len = data.shape[0]
+    m = data.shape[1]
+    #get values of functions of t
+    #x:shape(seq_len,batch,input_size)
+    x=get_t_function_values_(seq_len)
     #y:shape(T,m)
-    y = data_and_t_function_values['multi_target']
+    print('y-shape')
+    y= torch.from_numpy(data.values)
+    print(y.shape)
+
     lstm_model = DeepVARwT(input_size=x.shape[2],
                           hidden_dim=hidden_dim,
                           num_layers=num_layers,
@@ -250,57 +195,54 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
     log_likelihood=[]
     loss_trend=[]
     count_temp=1
-    x_input = change_data_shape(x)
     import os
-    #create folder for saving estimated trend
+    #create a folder to save estimated trends
     estimated_trend_file_path = res_saving_path+ 'trend/'
     trend_folder = os.path.exists(estimated_trend_file_path)
     if not trend_folder:  # 
         os.makedirs(estimated_trend_file_path)
 
-    #create folder for saving pretrained model
+    #create a folder to saving pretrained-model files
     pretrained_model_file_path = res_saving_path + 'pretrained_model/'
     pretrained_model_folder = os.path.exists(pretrained_model_file_path)
     if not pretrained_model_folder:  # 
         os.makedirs(pretrained_model_file_path)
 
-#prepare data for plotting estiamted trends and observations
-    ts_list = []
-    for n in range(y.shape[1]):
-        ts = y[:, n]
-        ts_flatten = torch.flatten(ts)
-        ts_list.append(ts_flatten.tolist())
-    import pandas as pd
-    df_ts = pd.DataFrame(np.transpose(np.array(ts_list)))
+
 #filtered data
     df_filtered_ts=filtered_data.iloc[:,1:]
     filtered_trend=torch.from_numpy(np.array(filtered_data.iloc[:,1:]))
-    for iter in range(0,iterations_trend):
+    #begin to enter Phase 1 (initial trend estimation)
+    for i in range(0,iter1):
         count_temp = 1 + count_temp
-        var_coeffs, residual_parameters, trend = lstm_model(x_input.float())
+        var_coeffs, residual_parameters, trend = lstm_model(x.float())
         trend_part=trend[8:158,:,:]
         trend_error = compute_error_for_trend_estimation(target=filtered_trend.float(),
                                                    trend=trend_part)
         optimizer.zero_grad()
         trend_error.backward()
         optimizer.step()
-        print('iterations' + str(iter+1) + ':trend error')
+        print('iterations' + str(i+1) + ':trend error')
         print(trend_error)
         loss_trend.append(trend_error.detach().numpy())
     #save trend estimation loss
-    loss_pd= pd.DataFrame({'trend_loss':loss_trend})
-    loss_pd.to_csv(estimated_trend_file_path+'trend_loss.csv')
+    loss_df= pd.DataFrame({'trend_loss':loss_trend})
+    loss_df.to_csv(estimated_trend_file_path+'trend_loss.csv')
 
+    #begin to simultaneously estimate trend and AR parameter
 
+    #setting gradient of parameters as true means that all these parameters will be used for the computation of log-likelihood in Phase 2
+    #LSTM parameters for trend
     lstm_model.lstm.weight_ih_l0.requires_grad = True
     lstm_model.lstm.weight_hh_l0.requires_grad = True
     lstm_model.lstm.bias_ih_l0.requires_grad = True
     lstm_model.lstm.bias_hh_l0.requires_grad = True
     lstm_model.add_trend.weight.requires_grad = True
     lstm_model.add_trend.bias.requires_grad = True
+      #AR parameters
     lstm_model.init_ar_parameters.requires_grad=True
     lstm_model.init_residual_params.requires_grad=True
-
+  #set different learning rates for different parameters
     optimizer = torch.optim.Adam([{'params': lstm_model.lstm.weight_ih_l0,'lr': lr_trend},
         {'params': lstm_model.lstm.weight_hh_l0, 'lr': lr_trend},{'params': lstm_model.lstm.bias_ih_l0,'lr': lr_trend},
         {'params': lstm_model.lstm.bias_hh_l0, 'lr': lr_trend},{'params': lstm_model.add_trend.weight,'lr': lr_trend},
@@ -308,8 +250,9 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
         {'params': lstm_model.init_residual_params, 'lr': lr}])
 
 
-    for i in range(iterations_AR):
-        var_coeffs, residual_parameters,trend= lstm_model(x_input.float())
+  #begin to enter Phase 2
+    for i in range(iter2):
+        var_coeffs, residual_parameters,trend= lstm_model(x.float())
         likelihood_loss = compute_log_likelihood(target=y.float(),
                                                 var_coeffs=var_coeffs.float(),
                                                 residual_parameters=residual_parameters,
@@ -337,8 +280,8 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
 
 
     #save loss values
-    loss_pd= pd.DataFrame({'likelihood':log_likelihood})
-    loss_pd.to_csv(res_saving_path+'log_likelihood_loss_phase2.csv')  
+    loss_df= pd.DataFrame({'likelihood':log_likelihood})
+    loss_df.to_csv(res_saving_path+'log_likelihood_loss_phase2.csv')  
     #saving estimated trend
     trend_list = []
     for n in range(m):
@@ -347,7 +290,7 @@ def train_network(train_data,filtered_data,num_layers,hidden_dim,iterations_tren
     df_trend = pd.DataFrame(np.transpose(np.array(trend_list))) 
     df_trend.to_csv(estimated_trend_file_path+'estimated_trend.csv')  
     #plot estimated trend
-    plot_estimated_trend(m,df_trend,df_ts,estimated_trend_file_path)
+    plot_estimated_trend(m,df_trend,data,estimated_trend_file_path)
     #print AR coefficients
     print_AR_params(var_coeffs, residual_parameters,m,order)
     #save pretrained-model
