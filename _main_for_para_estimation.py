@@ -310,9 +310,9 @@ num_layers=1
 iter1=15000
 iter2=6000
 threshould=1e-5
-path_of_dataset='./simulation-study/exp44_len800_VAR2_m3_train.csv'
+path_of_dataset='./simulation-study/VAR2_process.csv'
 data=pd.read_csv(path_of_dataset).iloc[:, 1:]
 #saving_path='./image/simulation-estimation-res-two-steps-diff-lr/p2_k3'
-res_saving_path='./simulation-study/simulation-res-44-rep2/'
+res_saving_path='./simulation-study/simulation-res/'
 train_network(data, num_layers,hidden_dim, iter1,iter2,lr,lr_trend, m, order,res_saving_path,threshould)
 
