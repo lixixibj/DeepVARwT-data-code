@@ -334,7 +334,7 @@ test_len=horizon+forecast_times-1
 train_len=len_of_data-test_len
 threshould=0.000005
 
-saving_path='./real-data-forecasting-res-test3/'
+saving_path='./real-data-forecasting-res/'
 
 seed_value_list=[2100,0,4000,4000,4000,
                  4000,4000,4000,4000,4000,
