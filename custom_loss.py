@@ -121,7 +121,7 @@ def compute_log_likelihood(
         log_likelihood_temp=log_likelihood_temp+torch.log(torch.det(var_cov_innovations_varp))+torch.mm(
             torch.mm(error.t(), torch.inverse(var_cov_innovations_varp)), error)
 
-    return 0.5*log_likelihood_temp
+    return 0.5*(log_likelihood_temp+m*len_of_seq*torch.log(torch.tensor(2*math.pi)))
 
 
 
