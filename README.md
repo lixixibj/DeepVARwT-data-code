@@ -49,17 +49,29 @@ python _main_for_para_estimation.py
 ```
 The output of estimated VAR coefficient matrices and variance-covariance matrix of innovations is 
 ```
-VAR coefficients
-tensor([[-1.1027, -0.0938,  0.2779],
-        [-0.6773, -0.4081, -0.1873],
-        [ 0.2853,  0.4335,  0.3167]], grad_fn=<SelectBackward0>)
-tensor([[-0.5458, -0.2654, -0.2364],
-        [-0.4080,  0.4836,  0.3899],
-        [-0.0205, -0.2652,  0.2650]], grad_fn=<SelectBackward0>)
-Variance-covariance of innovations
-tensor([[ 0.4280, -0.2636,  0.0963],
-        [-0.2636,  0.3699,  0.0037],
-        [ 0.0963,  0.0037,  0.4149]], grad_fn=<MmBackward0>)
+iterations600:log-likelihood
+tensor([[2145.5857]], grad_fn=<MulBackward0>)
+tensor([[-1.0218, -0.1179,  0.2323],
+        [-0.6974, -0.3911, -0.1870],
+        [ 0.3298,  0.4071,  0.2763]], grad_fn=<SelectBackward0>)
+tensor([[-0.4584, -0.3236, -0.2738],
+        [-0.4129,  0.5346,  0.4579],
+        [ 0.0341, -0.2551,  0.2952]], grad_fn=<SelectBackward0>)
+var_cov_innovations_of_varp
+tensor([[ 0.4798, -0.2597,  0.0802],
+        [-0.2597,  0.3736,  0.0022],
+        [ 0.0802,  0.0022,  0.4109]], grad_fn=<MmBackward0>)
+tensor([[-1.0218, -0.1179,  0.2323],
+        [-0.6974, -0.3911, -0.1870],
+        [ 0.3298,  0.4071,  0.2763]], grad_fn=<SelectBackward0>)
+tensor([[-0.4584, -0.3236, -0.2738],
+        [-0.4129,  0.5346,  0.4579],
+        [ 0.0341, -0.2551,  0.2952]], grad_fn=<SelectBackward0>)
+var_cov_innovations_of_varp
+tensor([[ 0.4798, -0.2597,  0.0802],
+        [-0.2597,  0.3736,  0.0022],
+        [ 0.0802,  0.0022,  0.4109]], grad_fn=<MmBackward0>)
+Time:  2355.3818046106026
 ```
 The training loss function values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
 #### US macroeconomics series 1
