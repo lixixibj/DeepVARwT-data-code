@@ -37,8 +37,17 @@ def compute_error_for_trend_estimation(
     """
 
     len_of_seq = target.shape[0]
+    m=target.shape[1]
     trend_value=trend[:,0,:]
+    print('shape')
+    print(torch.square(trend_value-target).shape)
+    weights = torch.zeros(len_of_seq,m)
+    w= torch.arange(1, (len_of_seq+1)) / len_of_seq
+    for i in range(m):
+        weights[:,i]=w
+
     error=torch.sum(torch.square(trend_value-target))
+
 
     return error
 
@@ -85,6 +94,8 @@ def compute_log_likelihood(
            description: -log-likelihood
            type: tensor 
     """
+    print('target-shape')
+    print(target.shape)
 
     len_of_seq = target.shape[0]
     log_likelihood_temp= 0
@@ -162,8 +173,10 @@ def transfrom_var_cov_matrix(var_cov_matrix,order,m):
             b_c=c* m
             e_c=c* m+m
             #copy upper block matrix
-            elem_temp=var_cov_matrix[b_c:e_c,b_r:e_r].clone()
-            var_cov_matrix[b_c:e_c,b_r:e_r]=var_cov_matrix[b_r:e_r,b_c:e_c].clone()
+            #elem_temp=var_cov_matrix[b_c:e_c,b_r:e_r].clone()
+            elem_temp=var_cov_matrix[b_c:e_c,b_r:e_r]
+            #var_cov_matrix[b_c:e_c,b_r:e_r]=var_cov_matrix[b_r:e_r,b_c:e_c].clone()
+            var_cov_matrix[b_c:e_c,b_r:e_r]=var_cov_matrix[b_r:e_r,b_c:e_c]
             var_cov_matrix[b_r:e_r,b_c:e_c]=elem_temp
 
     return (var_cov_matrix)
@@ -555,12 +568,12 @@ def make_var_covar_matrix(residual_parameters,m,order):
     number_of_parms=(m*(m+1))/2
     covariance_matrix=torch.eye(m,m)
     count_temp=0
-    #make upper triangel matrix
+    #make lower triangel matrix
     for i in range(m):
-        for j in range(m-i):
-            covariance_matrix[i,i+j]=residual_parameters[count_temp]
+        for j in range(i+1):
+            covariance_matrix[i,j]=residual_parameters[count_temp]
             count_temp=count_temp+1
-    covariance_matrix_semi_positive = torch.mm(covariance_matrix.t(), covariance_matrix)
+    covariance_matrix_semi_positive = torch.mm(covariance_matrix, covariance_matrix.t())
     zeros_cols = torch.zeros([m, (mp - m)])
     #2.generate (mp-m)*mp matrix
     zeros_rows = torch.zeros([(mp - m),mp ])
