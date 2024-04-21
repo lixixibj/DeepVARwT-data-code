@@ -48,33 +48,7 @@ The following code will do 100 parameter estimation on simulated three-diemnsion
 ```
 python _main_for_para_estimation_parallel.py
 ```
-The output of estimated VAR coefficient matrices and variance-covariance matrix of innovations is 
-```
-iterations600:log-likelihood
-tensor([[2145.5857]], grad_fn=<MulBackward0>)
-tensor([[-1.0218, -0.1179,  0.2323],
-        [-0.6974, -0.3911, -0.1870],
-        [ 0.3298,  0.4071,  0.2763]], grad_fn=<SelectBackward0>)
-tensor([[-0.4584, -0.3236, -0.2738],
-        [-0.4129,  0.5346,  0.4579],
-        [ 0.0341, -0.2551,  0.2952]], grad_fn=<SelectBackward0>)
-var_cov_innovations_of_varp
-tensor([[ 0.4798, -0.2597,  0.0802],
-        [-0.2597,  0.3736,  0.0022],
-        [ 0.0802,  0.0022,  0.4109]], grad_fn=<MmBackward0>)
-tensor([[-1.0218, -0.1179,  0.2323],
-        [-0.6974, -0.3911, -0.1870],
-        [ 0.3298,  0.4071,  0.2763]], grad_fn=<SelectBackward0>)
-tensor([[-0.4584, -0.3236, -0.2738],
-        [-0.4129,  0.5346,  0.4579],
-        [ 0.0341, -0.2551,  0.2952]], grad_fn=<SelectBackward0>)
-var_cov_innovations_of_varp
-tensor([[ 0.4798, -0.2597,  0.0802],
-        [-0.2597,  0.3736,  0.0022],
-        [ 0.0802,  0.0022,  0.4109]], grad_fn=<MmBackward0>)
-Time:  2355.3818046106026
-```
-The training loss function values, estimated trends and pretrained-model file will be saved in the folder `simulation-res`.
+The training loss function values, estimated trends and pretrained-model file will be saved in the folder `simulation-res/100-res/`.
 #### US macroeconomics series 1
 The following code will make predictions from 20 training samples
 ```
