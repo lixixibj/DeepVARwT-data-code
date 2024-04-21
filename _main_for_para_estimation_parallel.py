@@ -347,15 +347,11 @@ num_layers=1
 iter1=13000
 iter2=600
 threshould=1e-5
-# path_of_dataset='./simulation-study/exp44_len800_VAR2_m3_train.csv'
-# path_of_dataset='/Users/xixili/Dropbox/deep-var-tend/deep-factors/sim_exp100/simulated_data_len800_VAR2_m3/exp33_len800_VAR2_m3_train.csv'
-# path_of_dataset='/Users/xixili/Dropbox/deep-var-tend/deep-factors/sim_exp100/simulated_data_len800_VAR2_m3/exp48_len800_VAR2_m3_train.csv'
-# data=pd.read_csv(path_of_dataset).iloc[:, 1:]
-#saving_path='./image/simulation-estimation-res-two-steps-diff-lr/p2_k3'
-data_saving_path='/Users/xixili/Dropbox/deep-var-tend/deep-factors/sim_exp100/simulated_data_len800_VAR2_m3/'
-res_saving_path='./simulation-study/100/'
-exps=1
-#train_network(data, num_layers,hidden_dim, iter1,iter2,lr,lr_trend, m, order,res_saving_path,threshould)
+
+data_saving_path='./simulation-study/simulated_data_len800_VAR2_m3/'
+res_saving_path='./simulation-study/100-res/'
+#100 estimation
+exps=100
 # Run the process in parallel
 results = Parallel(n_jobs=-1)(delayed(process_section)(num, data_saving_path,num_layers,hidden_dim, iter1,iter2,lr,lr_trend, m, order,res_saving_path,threshould) for num in range(exps))
 
@@ -371,8 +367,8 @@ for num, (all_coeffs,var_cov_m) in enumerate(results):
     var_cov_all[num,:]=var_cov_m.detach().numpy().flatten().tolist()
 
 #save 
-pd.DataFrame(coeffs_all).to_csv('./simulation-study/all_coeffs_50exps.csv')
-pd.DataFrame(var_cov_all).to_csv('./simulation-study/all_var_cov_50exps.csv')
+pd.DataFrame(coeffs_all).to_csv('./simulation-study/100-res/all_coeffs_100exps.csv')
+pd.DataFrame(var_cov_all).to_csv('./simulation-study/100-res/all_var_cov_100exps.csv')
 
 
 
