@@ -115,7 +115,7 @@ The following code will make predictions from 20 training samples
 ```
 python _main_make_predictions_for_climate_p.py
 ```
-The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
+The output of forecasting accuracies in terms of APE and SIS at h=1,...6 is 
 ```
 MAPE
 [[16.85218399 21.447882   21.33873643 19.16176024 22.86178841 25.36380648]
