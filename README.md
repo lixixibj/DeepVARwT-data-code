@@ -77,7 +77,7 @@ The training loss function values, estimated trends and pretrained-model file wi
 #### US macroeconomics series 1
 The following code will make predictions from 20 training samples
 ```
-python _main_make_predictions_for_real_data.py
+python _main_make_predictions_for_first_macro_data.py
 ```
 The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
 ```
@@ -113,7 +113,7 @@ Time:  3344.0242955870926
 #### Global temperatures
 The following code will make predictions from 20 training samples
 ```
-python _main_make_predictions_for_real_data.py
+python _main_make_predictions_for_climate_p.py
 ```
 The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
 ```
@@ -143,7 +143,7 @@ Time:  1835.2268811790273
 #### US macroeconomics series 2
 The following code will make predictions from 20 training samples
 ```
-python _main_make_predictions_for_real_data.py
+python_main_make_predictions_for_second_usmacro_data_bvarsv.py
 ```
 The output of forecasting accuracies in terms of APE and SIS at h=1,...,8 is 
 ```
