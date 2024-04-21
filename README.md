@@ -13,7 +13,7 @@ This repository contains python code and data used to reproduce results in a sim
 
 Here, we brifely introduce some important `.py` files in this project.
 
-- `_main_for_para_estimation.py`: main code for parameter estimation in simulation study.
+- `_main_for_para_estimation_parallel.py`: main code for 100 parameter estimation in a simulation study.
 - `lstm_network.py`: set up an LSTM network to generate trend and VAR parameters.
 - `custom_loss.py`: evaluate log-likelihood function.
 - `_model_fitting_for_real_data.py`: model fitting for real data.
@@ -43,9 +43,9 @@ pip install matplotlib==3.3.4
 ```
 ## Usage
 #### Simulation study
-The following code will do parameter estimation on a simulated three-diemnsional VAR(2) procoess
+The following code will do 100 parameter estimation on simulated three-diemnsional VAR(2) procoesses
 ```
-python _main_for_para_estimation.py
+python _main_for_para_estimation_parallel.py
 ```
 The output of estimated VAR coefficient matrices and variance-covariance matrix of innovations is 
 ```
