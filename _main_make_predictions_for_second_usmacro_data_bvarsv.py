@@ -508,7 +508,6 @@ test_len=horizon+forecast_times-1
 train_len=len_of_data-test_len
 threshould=0.0000001
 
-#saving_path='./real-data-forecasting-python37-seed_all4000-iter1-2500-iter2-300-usmacro-bvarsv-h15/'
 
 saving_path='./second-marcro-bvarsv-python36-seed4000-iter1-'+str(iter1)+'-iter2-'+str(iter2)+'-h10-12-15-rep'+'/'
 
@@ -519,14 +518,8 @@ msis_all=np.zeros((forecast_times,m,horizon))
 
 
 num_of_t_list=[2,3,4]
-#num_of_h_list=[10,15,20]
-#num_of_h_list=[15,20,25]
 num_of_h_list=[10,12,15]
 
-# num_of_t_list=[2]
-# num_of_h_list=[15]
-
-#set_global_seed(4000)
 # Run the process in parallel
 results = Parallel(n_jobs=-1)(delayed(process_section)(f, train_len, horizon, num_of_t_list, num_of_h_list, num_layers, iter1, iter2, m, order, lr, lr_trend, threshould, data, saving_path, seasonality,name_list) for f in range(forecast_times))
 
@@ -564,45 +557,5 @@ stop = timeit.default_timer()
 
 print('Time: ', stop - start) 
 
-# for f in range(forecast_times):
-#     #set_global_seed(seed_value_list[f])
-    
-#     b=f
-#     e=b+train_len
-#     training_data=data.iloc[b:e,:]
-#     train_test_data=data.iloc[b:(e+horizon),:]
-#     #filtered_data=pd.read_csv(filted_data_path+str(b+1)+'.csv').iloc[8:158,:]
-#     print('train_data_shape')
-#     print(training_data.shape)
-#     res_saving_path=saving_path+'section_'+str(b)+'/'
-#     # try:
-#         #model fitting
-#     likelihood_list=[]
-#     model_name_list=[]
-#     for i, t_num in enumerate(num_of_t_list):
-#         for j, h_num in enumerate(num_of_h_list):
-#             likelihood,lstm_model,model_name=train_network(training_data,t_num,num_layers,h_num,iter1,iter2,m,order,lr,lr_trend,res_saving_path,threshould)
-#             likelihood_list.append(likelihood)
-#             model_name_list.append(model_name)
-#             #save pretrained-model
 
-#     #find the model with min -likelihood
-#     min_index = likelihood_list.index(min(likelihood_list))
-#     #
-#     optimal_model_name=model_name_list[min_index]
-
-#         #make predictions
-#     ape,sis,forecast,fore_low,fore_upp=forecast_based_on_pretrained_model(train_test_data,order,optimal_model_name,res_saving_path,horizon,seasonality)
-#     mape_all[f,:,:]=ape
-#     msis_all[f,:,:]=sis
-#     #save forecasts
-#     pd.DataFrame(forecast).to_csv(res_saving_path+'point_forecasts.csv')
-#     pd.DataFrame(fore_low).to_csv(res_saving_path+'lower_forecasts.csv')
-#     pd.DataFrame(fore_upp).to_csv(res_saving_path+'upper_forecasts.csv')
-
-# #calculate averaged accuracy
-# print('MAPE')
-# print(np.mean(mape_all,axis=0))
-# print('MSIS')
-# print(np.mean(msis_all,axis=0))
 
