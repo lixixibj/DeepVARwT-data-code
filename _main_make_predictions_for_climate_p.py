@@ -490,7 +490,7 @@ order=3
 lr_trend=0.0005
 lr=0.01
 seasonality=1
-name_of_dataset='/Users/xixili/Dropbox/deep-var-tend/deepTVARwT/real-data/temperature_data/temperature_data.csv'
+name_of_dataset='./real-data/temperature_data.csv'
 #filted_data_path='./real-data/filtered-data/'
 data=pd.read_csv(name_of_dataset).iloc[:,1:]
 print('data-shape')
