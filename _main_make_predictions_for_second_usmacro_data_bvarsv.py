@@ -11,7 +11,7 @@ from seed import *
 import random
 from forecasting_accuracy import *
 from lstm_network import *
-from _model_fitting_for_real_data_no_filter import *
+from _model_fitting_for_real_data import *
 import re
 
 
