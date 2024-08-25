@@ -41,6 +41,7 @@ pip install pandas==1.1.5
 pip install packaging==21.3 
 pip install matplotlib==3.3.4
 pip install statsmodels==0.12.2
+pip install joblib
 ```
 ## Usage
 #### Simulation study
