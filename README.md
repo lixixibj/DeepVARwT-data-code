@@ -37,6 +37,8 @@ pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://down
 
 The additonal installation of other packages with specific versions can be implemented using
 ```
+#for deepar and deepstate
+pip install mxnet==1.7.0.post2 gluonts==0.8.1 numpy==1.19.5 pandas
 pip install pandas==1.1.5 
 pip install packaging==21.3 
 pip install matplotlib==3.3.4
