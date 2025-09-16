@@ -19,7 +19,7 @@ Here, we brifely introduce some important `.py` files in this project.
 - `_model_fitting_for_real_data.py`: model fitting for real data.
 - `_main_make_predictions_for_real_data.py`: make predictions using the fitted model.
 
-In addition, we have provided source code for reproducing forecasting results from DeepAR and DeepState in the folder `DeepAR-DeepState`.
+In addition, we have provided source code for reproducing forecasting results from DeepAR and DeepState in the folder `deepar-deepstate`.
 
 
 ## Preliminaries
