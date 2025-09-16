@@ -13,11 +13,13 @@ This repository contains python code and data used to reproduce results in a sim
 
 Here, we brifely introduce some important `.py` files in this project.
 
-- `_main_for_para_estimation_parallel.py`: main code for 100 parameter estimation in a simulation study.
+- `_main_for_para_estimation_parallel_diff_seeds.py`: main code for 100 parameter estimation in a simulation study.
 - `lstm_network.py`: set up an LSTM network to generate trend and VAR parameters.
 - `custom_loss.py`: evaluate log-likelihood function.
 - `_model_fitting_for_real_data.py`: model fitting for real data.
 - `_main_make_predictions_for_real_data.py`: make predictions using the fitted model.
+
+In addition, we have provided source code for reproducing forecasting results from DeepAR and DeepState in the folder DeepAR-DeepState.
 
 
 ## Preliminaries
