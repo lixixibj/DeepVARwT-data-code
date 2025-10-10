@@ -29,8 +29,8 @@ All code was implemented using
 Installation in a virtual environment is recommended:
 ```
 #install python with version 3.6.15
-conda create --name python36 python=3.6.15
-conda activate python36
+conda create --name mypy36 python=3.6.15
+conda activate mypy36
 pip install --upgrade typing-extensions
 #install pytorch with version 1.10.2
 pip install torch==1.10.2 torchvision==0.11.3 torchaudio==0.10.2 -f https://download.pytorch.org/whl/cpu/torch_stable.html
