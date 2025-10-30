@@ -156,7 +156,7 @@ num of parameters
 References
 ----------
 
-- Xixi Li, Jingsong Yuan (2022).  DeepVARwT: Deep Learning for a VAR Model with Trend.  [Journal of Applied Statistics](https://arxiv.org/abs/2209.10587).
+- Xixi Li, Jingsong Yuan (2025).  DeepVARwT: Deep Learning for a VAR Model with Trend.  [Journal of Applied Statistics](https://www.tandfonline.com/doi/full/10.1080/02664763.2025.2577657).
 
 
 
